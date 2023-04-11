@@ -32,7 +32,9 @@ class TreeListFragment : Fragment() {
         }
         /* sets up the recycler view*/
         val trees = listOf<Tree>()
-        val adapter = TreeRecyclerViewAdapter(trees)
+        val adapter = TreeRecyclerViewAdapter(trees, { tree, isFavorite ->
+            treeViewModel.setIsFavorite(tree, isFavorite)
+        })
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 

@@ -27,9 +27,29 @@ class TreeViewModel : ViewModel() {
             if (error != null) {
                 Log.e(TAG, "Error fetching latest trees", error)
             } else if (snapshot != null) {
-                val trees = snapshot.toObjects(Tree::class.java) // trees would be list of Tree objects
+//                val trees = snapshot.toObjects(Tree::class.java) // trees would be list of Tree objects
+                val trees = mutableListOf<Tree>()
+                for (treeDocument in snapshot) {
+                    val tree = treeDocument.toObject(Tree::class.java)
+                    tree.documentReference = treeDocument.reference
+                    trees.add(tree)
+                }
                 Log.d(TAG, "Trees from firebase: $trees")
                 latestTrees.postValue(trees) // updates this mutable live data as anything changes on firebase db
             }
         }
+
+    fun setIsFavorite(tree: Tree, favorite: Boolean) {
+        tree.documentReference?.update("favorite", favorite)
+    }
+
+    fun addTree(tree: Tree) {
+        treeCollectionReference.add(tree)
+            .addOnSuccessListener { treeDocumentReference ->
+                Log.d(TAG, "New tree added at ${treeDocumentReference.path}")
+            }
+            .addOnFailureListener {error ->
+                Log.e(TAG, "Error adding tree $tree", error)
+            }
+    }
 }

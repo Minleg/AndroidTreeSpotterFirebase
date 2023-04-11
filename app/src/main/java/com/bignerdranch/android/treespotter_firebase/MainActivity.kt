@@ -8,11 +8,16 @@ import java.util.*
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
+
+    val CURRENT_FRAGMENT_BUNDLE_KEY = "current fragment bundle key"
+    var currentFragmentTag = "MAP"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        showFragment("MAP") // first shows the Map Fragment
+        currentFragmentTag = savedInstanceState?.getString(CURRENT_FRAGMENT_BUNDLE_KEY) ?: "MAP"
+
+        showFragment(currentFragmentTag) // first shows the Map Fragment
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
@@ -36,6 +41,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun showFragment(tag: String) {
         // if we are not seeing the fragment with the given tag, display it
+
+        currentFragmentTag = tag
+
         if (supportFragmentManager.findFragmentByTag(tag) == null) {
             val transaction = supportFragmentManager.beginTransaction()
             when(tag) {
@@ -44,6 +52,11 @@ class MainActivity : AppCompatActivity() {
             }
             transaction.commit()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(CURRENT_FRAGMENT_BUNDLE_KEY, currentFragmentTag)
     }
 }
 
