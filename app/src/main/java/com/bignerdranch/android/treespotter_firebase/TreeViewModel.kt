@@ -52,4 +52,8 @@ class TreeViewModel : ViewModel() {
                 Log.e(TAG, "Error adding tree $tree", error)
             }
     }
+
+    fun deleteTree(tree: Tree) {
+        tree.documentReference?.delete()
+    }
 }
