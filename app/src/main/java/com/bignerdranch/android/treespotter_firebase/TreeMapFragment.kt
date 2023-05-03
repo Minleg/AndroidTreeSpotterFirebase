@@ -268,8 +268,12 @@ class TreeMapFragment : Fragment() {
     }
 
     private fun getTreeName(): String {
-        return listOf("Fir", "Oak", "Pine", "Redwood").random()
-        // todo user for name
+        //return listOf("Fir", "Oak", "Pine", "Redwood").random()
+        var trees = listOf<Tree>()
+        treeViewModel.latestTrees.observe(requireActivity()) {treeList ->
+            trees = treeList
+        }
+        return trees.random().toString()
     }
 
     companion object {
